@@ -14,7 +14,6 @@ import java.util.regex.*;
 
 public class EmailReader {
 
-    // ── Configuration ─────────────────────────────────────────────────────────
     private static final String CLIENT_ID      = "af4d8fa0-07f1-4324-bb95-dff2c4ceb433";
     private static final Set<String> SCOPE     = Collections.singleton("Mail.Read");
     private static final String TARGET_SUBJECT = "Notification from Atlas: Incoming Enrollment Request";
@@ -28,50 +27,47 @@ public class EmailReader {
 
     public static void main(String[] args) throws Exception {
 
-        // ── 1. Build the public client application ──────────────────────────
+ 
         PublicClientApplication pca = PublicClientApplication
                 .builder(CLIENT_ID)
-                // "common" authority supports personal + work/school accounts.
-                // Change to your tenant ID if this is a single-tenant app.
+           
                 .authority("https://login.microsoftonline.com/common")
                 .build();
 
-        // ── 2. Authenticate via Device Code Flow ────────────────────────────
-        //    The user visits a URL, enters a code – no browser popup needed.
+        
         DeviceCodeFlowParameters deviceCodeParams = DeviceCodeFlowParameters
                 .builder(SCOPE, deviceCode -> System.out.println(deviceCode.message()))
                 .build();
 
         authResult = pca.acquireToken(deviceCodeParams).join();
-        System.out.println("✅ Access token acquired. Starting email polling...\n");
+        System.out.println("Access token acquired. Starting email polling...\n");
 
-        // ── 3. Poll the inbox every POLL_SECONDS ────────────────────────────
         HttpClient httpClient = HttpClient.newHttpClient();
 
         while (true) {
-            // Silently refresh the token before each poll to avoid expiry
+            // Silently refresh the token before each poll to avoid expir
             authResult = refreshTokenSilently(pca);
 
             readInbox(httpClient, authResult.accessToken());
 
-            System.out.printf("⏳ Waiting %d seconds before next check...%n", POLL_SECONDS);
+            System.out.printf("Waiting %d seconds before next check...%n", POLL_SECONDS);
             Thread.sleep(POLL_SECONDS * 1000L);
         }
     }
 
-    // ── Token refresh ──────────────────────────────────────────────────────────
+
     private static IAuthenticationResult refreshTokenSilently(PublicClientApplication pca) {
         try {
             return pca.acquireTokenSilently(
                     SilentParameters.builder(SCOPE, authResult.account()).build()
             ).join();
         } catch (Exception e) {
-            System.out.println("⚠️  Silent token refresh failed – using existing token.");
+            System.out.println("Silent token refresh failed – using existing token.");
             return authResult;
         }
     }
 
-    // ── Inbox reader ───────────────────────────────────────────────────────────
+    
     private static void readInbox(HttpClient httpClient, String accessToken) throws Exception {
 
         String url = "https://graph.microsoft.com/v1.0/me/mailFolders/inbox/messages"
@@ -90,7 +86,7 @@ public class EmailReader {
                 httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
         if (response.statusCode() != 200) {
-            System.out.println("❌ Error fetching emails – HTTP " + response.statusCode());
+            System.out.println("Error fetching emails – HTTP " + response.statusCode());
             System.out.println(response.body());
             return;
         }
@@ -136,7 +132,6 @@ public class EmailReader {
         }
     }
 
-    // ── Enrollment parser ──────────────────────────────────────────────────────
     private static void parseEnrollmentDetails(String bodyText) {
 
         Pattern namePattern = Pattern.compile("Dear\\s+([A-Za-z]+)");
@@ -161,7 +156,7 @@ public class EmailReader {
             System.out.println("   Course    : " + courseType + " Course");
             System.out.println("   Date      : " + date);
         } else {
-            System.out.println("   ⚠️  Could not parse enrollment details from email body.");
+            System.out.println("   Could not parse enrollment details from email body.");
             System.out.println("   Raw body preview: "
                     + bodyText.substring(0, Math.min(200, bodyText.length())) + "...");
         }
