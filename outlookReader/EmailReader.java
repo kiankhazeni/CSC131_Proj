@@ -95,7 +95,7 @@ public class EmailReader {
         JSONArray  messages = json.getJSONArray("value");
 
         if (messages.isEmpty()) {
-            System.out.println("📭 No emails found.");
+            System.out.println("No emails found.");
             return;
         }
 
@@ -121,14 +121,14 @@ public class EmailReader {
                     .replaceAll("\\s+", " ")
                     .trim();
 
-            System.out.println("📧 New enrollment email detected!");
+            System.out.println("New enrollment email detected!");
 
             parseEnrollmentDetails(bodyText);
             System.out.println("================================");
         }
 
         if (!foundNew) {
-            System.out.println("📬 No new enrollment emails.");
+            System.out.println("No new enrollment emails.");
         }
     }
 
