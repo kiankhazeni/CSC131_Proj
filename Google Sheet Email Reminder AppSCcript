@@ -1,0 +1,52 @@
+function onChange(e) {
+  sendPaymentReminders();
+}
+
+function sendPaymentReminders() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getActiveSheet();
+  const data = sheet.getDataRange().getValues();
+
+  for (let i = 1; i < data.length; i++) {
+    const email = String(data[i][0] || "").trim();      // Column A
+    const firstName = String(data[i][1] || "").trim();  // Column B
+    const sent = String(data[i][9] || "").trim();       // Column J
+
+    if (!email || sent === "Yes") {
+      continue;
+    }
+
+    MailApp.sendEmail({
+      to: email,
+      subject: "Complete Your AHA Course Registration",
+      body:
+`Hello ${firstName},
+
+Thank you for starting the registration process on the American Heart Association site for one of our upcoming AHA BLS, ACLS, or PALS courses.
+
+To complete and finalize your registration for your desired course please follow the direction below.
+
+Step 1: Click on Scheduling link: https://cprlifeline.net/locations/
+Step 2: Choose which location is most convenient for you
+Step 3: Choose which course you need
+Step 4: Choose which day and time are most convenient for you
+Step 5: Finalize with all required information and payment
+
+For individuals registering for an ACLS or PALS course we do offer discounted combo packages for adding BLS or taking multiple courses.
+
+Any further questions, please let us know.
+
+Thank you,
+
+Chris Peters
+CPR Lifeline
+
+877-422-7755
+info@cprlifeline.net
+
+After hours - 209-499-2249
+https://cprlifeline.net/`
+    });
+
+    sheet.getRange(i + 1, 10).setValue("Yes"); // Column J
+  }
+}
