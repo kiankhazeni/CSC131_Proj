@@ -17,7 +17,7 @@ import java.util.*;
 
 public class SheetsUploader {
 
-    private static final String CREDENTIAL_FILE = "src/main/credentials.json";
+    private static final String CREDENTIAL_FILE = "src/main/resources/credentials.json";
 
     public static Sheets getSheetsService() throws Exception {
 
