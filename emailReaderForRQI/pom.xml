@@ -60,6 +60,13 @@
             <version>2.1.0</version>
             <scope>compile</scope>
         </dependency>
+        <!-- Source: https://mvnrepository.com/artifact/com.github.mwiede/jsch -->
+        <dependency>
+            <groupId>com.github.mwiede</groupId>
+            <artifactId>jsch</artifactId>
+            <version>2.28.0</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
 </project>
