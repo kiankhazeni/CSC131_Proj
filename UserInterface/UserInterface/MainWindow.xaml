@@ -1,0 +1,66 @@
+﻿<Window x:Class="UserInterface.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="CPR Automation"
+        Height="600"
+        Width="1050"
+        WindowStartupLocation="CenterScreen">
+    <Grid Background="#F4F6F8">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="200"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Border Grid.Column="0" Background="#1F2937">
+            <StackPanel Margin="10">
+                <TextBlock Text="CPR Automation"
+                           Foreground="White"
+                           FontSize="18"
+                           FontWeight="Bold"
+                           Margin="0,0,0,20"/>
+
+                <Button Content="Dashboard"
+                        Command="{Binding ShowDashboardCommand}"
+                        Margin="0,0,0,8"
+                        Height="36"/>
+
+                <Button Content="Students"
+                        Command="{Binding ShowStudentsCommand}"
+                        Margin="0,0,0,8"
+                        Height="36"/>
+
+                <Button Content="Reminders"
+                        Command="{Binding ShowRemindersCommand}"
+                        Margin="0,0,0,8"
+                        Height="36"/>
+
+                <Button Content="Logs"
+                        Command="{Binding ShowLogsCommand}"
+                        Margin="0,0,0,8"
+                        Height="36"/>
+
+                <Button Content="Settings"
+                        Command="{Binding ShowSettingsCommand}"
+                        Margin="0,0,0,8"
+                        Height="36"/>
+            </StackPanel>
+        </Border>
+
+        <Grid Grid.Column="1" Margin="12">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Border Background="White" Padding="12" CornerRadius="6" Margin="0,0,0,12">
+                <TextBlock Text="{Binding CurrentSectionTitle}"
+                           FontSize="22"
+                           FontWeight="SemiBold"/>
+            </Border>
+
+            <Border Grid.Row="1" Background="White" Padding="12" CornerRadius="6">
+                <ContentControl Content="{Binding CurrentViewModel}"/>
+            </Border>
+        </Grid>
+    </Grid>
+</Window>
