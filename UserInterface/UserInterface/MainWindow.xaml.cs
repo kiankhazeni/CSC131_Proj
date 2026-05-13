@@ -28,7 +28,7 @@ namespace UserInterface
             {
                 Icon = SystemIcons.Application,
                 Visible = true,
-                Text = "CPR Automation"
+                Text = "Vitals"
             };
 
             _notifyIcon.DoubleClick += NotifyIcon_DoubleClick;
@@ -85,7 +85,7 @@ namespace UserInterface
 
                 _notifyIcon?.ShowBalloonTip(
                     1500,
-                    "CPR Automation",
+                    "Vitals",
                     "The app is still running in the system tray.",
                     FormsToolTipIcon.Info);
 
