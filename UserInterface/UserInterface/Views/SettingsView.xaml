@@ -1,39 +1,55 @@
 <UserControl x:Class="UserInterface.Views.SettingsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
-    <ScrollViewer VerticalScrollBarVisibility="Auto">
-        <Grid Margin="0,0,6,0">
-            <Grid.ColumnDefinitions>
-                <ColumnDefinition Width="220"/>
-                <ColumnDefinition Width="220"/>
-                <ColumnDefinition Width="*"/>
-            </Grid.ColumnDefinitions>
-            <Grid.RowDefinitions>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="12"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="12"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="12"/>
-                <RowDefinition Height="Auto"/>
-                <RowDefinition Height="12"/>
-                <RowDefinition Height="Auto"/>
-            </Grid.RowDefinitions>
+    <ScrollViewer VerticalScrollBarVisibility="Auto" Padding="12">
+        <Border Background="#374151" BorderBrush="#4B5563" BorderThickness="1" CornerRadius="8" Padding="20">
+            <StackPanel>
+                <TextBlock Text="System Configuration" FontWeight="Bold" FontSize="18" Foreground="White" Margin="0,0,0,20"/>
 
-            <TextBlock Grid.Row="0" Grid.Column="0" Text="Student check interval (min)" VerticalAlignment="Center" Foreground="#374151"/>
-            <TextBox Grid.Row="0" Grid.Column="1" Text="{Binding StudentCheckMinutes}" Padding="6"/>
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition Width="220"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="Auto"/>
+                        <RowDefinition Height="15"/>
+                        <RowDefinition Height="Auto"/>
+                    </Grid.RowDefinitions>
 
-            <TextBlock Grid.Row="2" Grid.Column="0" Text="Inbox check interval (min)" VerticalAlignment="Center" Foreground="#374151"/>
-            <TextBox Grid.Row="2" Grid.Column="1" Text="{Binding InboxCheckMinutes}" Padding="6"/>
+                    <TextBlock Grid.Row="0" Grid.Column="0" Text="Student check interval (min)" VerticalAlignment="Center" Foreground="#D1D5DB"/>
+                    <Border Grid.Row="0" Grid.Column="1" Background="#1F2937" BorderBrush="#4B5563" BorderThickness="1" CornerRadius="4">
+                        <TextBox Text="{Binding StudentCheckMinutes}" Background="Transparent" Foreground="White" BorderThickness="0" Padding="8" CaretBrush="White"/>
+                    </Border>
 
-            <TextBlock Grid.Row="4" Grid.Column="0" Text="Renewal reminder days before" VerticalAlignment="Center" Foreground="#374151"/>
-            <TextBox Grid.Row="4" Grid.Column="1" Text="{Binding RenewalReminderDays}" Padding="6"/>
+                    <TextBlock Grid.Row="2" Grid.Column="0" Text="Inbox check interval (min)" VerticalAlignment="Center" Foreground="#D1D5DB"/>
+                    <Border Grid.Row="2" Grid.Column="1" Background="#1F2937" BorderBrush="#4B5563" BorderThickness="1" CornerRadius="4">
+                        <TextBox Text="{Binding InboxCheckMinutes}" Background="Transparent" Foreground="White" BorderThickness="0" Padding="8" CaretBrush="White"/>
+                    </Border>
 
-            <TextBlock Grid.Row="6" Grid.Column="0" Text="Follow-up reminder days" VerticalAlignment="Center" Foreground="#374151"/>
-            <TextBox Grid.Row="6" Grid.Column="1" Text="{Binding FollowUpReminderDays}" Padding="6"/>
+                    <TextBlock Grid.Row="4" Grid.Column="0" Text="Renewal reminder days before" VerticalAlignment="Center" Foreground="#D1D5DB"/>
+                    <Border Grid.Row="4" Grid.Column="1" Background="#1F2937" BorderBrush="#4B5563" BorderThickness="1" CornerRadius="4">
+                        <TextBox Text="{Binding RenewalReminderDays}" Background="Transparent" Foreground="White" BorderThickness="0" Padding="8" CaretBrush="White"/>
+                    </Border>
 
-            <TextBlock Grid.Row="8" Grid.Column="0" Text="Sender email" VerticalAlignment="Center" Foreground="#374151"/>
-            <TextBox Grid.Row="8" Grid.Column="1" Text="{Binding SenderEmail}" Padding="6"/>
-        </Grid>
+                    <TextBlock Grid.Row="6" Grid.Column="0" Text="Follow-up reminder days" VerticalAlignment="Center" Foreground="#D1D5DB"/>
+                    <Border Grid.Row="6" Grid.Column="1" Background="#1F2937" BorderBrush="#4B5563" BorderThickness="1" CornerRadius="4">
+                        <TextBox Text="{Binding FollowUpReminderDays}" Background="Transparent" Foreground="White" BorderThickness="0" Padding="8" CaretBrush="White"/>
+                    </Border>
+
+                    <TextBlock Grid.Row="8" Grid.Column="0" Text="Sender email" VerticalAlignment="Center" Foreground="#D1D5DB"/>
+                    <Border Grid.Row="8" Grid.Column="1" Background="#1F2937" BorderBrush="#4B5563" BorderThickness="1" CornerRadius="4">
+                        <TextBox Text="{Binding SenderEmail}" Background="Transparent" Foreground="White" BorderThickness="0" Padding="8" CaretBrush="White"/>
+                    </Border>
+                </Grid>
+            </StackPanel>
+        </Border>
     </ScrollViewer>
 </UserControl>
