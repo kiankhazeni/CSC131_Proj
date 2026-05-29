@@ -1,32 +1,103 @@
 <UserControl x:Class="UserInterface.Views.LogsView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <UserControl.Resources>
+        <Style x:Key="LogActionButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource VitalsSidebarBrush}"/>
+            <Setter Property="Foreground" Value="{StaticResource VitalsWhiteBrush}"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="BorderBrush" Value="{StaticResource VitalsSidebarHoverBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Height" Value="34"/>
+            <Setter Property="Padding" Value="14,0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border x:Name="Root" Background="{TemplateBinding Background}" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" CornerRadius="6">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="{StaticResource VitalsSidebarHoverBrush}"/>
+                            </Trigger>
+                            <Trigger Property="IsPressed" Value="True">
+                                <Setter TargetName="Root" Property="Background" Value="{StaticResource VitalsSidebarPressedBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </UserControl.Resources>
+
     <Grid Margin="12">
-        <Border Background="#374151" CornerRadius="8" BorderBrush="#4B5563" BorderThickness="1" ClipToBounds="True">
-            <DataGrid ItemsSource="{Binding LogEntries}"
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="8"/>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="10"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="14"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <StackPanel Grid.Row="0">
+            <TextBlock Text="Logs Summary" Foreground="{StaticResource VitalsWhiteBrush}" FontSize="18" FontWeight="SemiBold"/>
+            <TextBlock Text="Full module console logs are stored in:" Foreground="{StaticResource VitalsMutedTextBrush}" FontSize="11" TextWrapping="Wrap" Margin="0,3,0,0"/>
+            <TextBlock Text="{Binding LogFolderPath}" Foreground="{StaticResource VitalsMutedTextBrush}" FontSize="11" TextWrapping="Wrap"/>
+        </StackPanel>
+
+        <Border Grid.Row="2" Background="{StaticResource VitalsPanelBrush}" BorderBrush="{StaticResource VitalsBorderBrush}" BorderThickness="1" CornerRadius="8" Padding="10">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="90"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <TextBlock Grid.Column="0" Text="Search" Foreground="{StaticResource VitalsBodyTextBrush}" VerticalAlignment="Center" FontWeight="SemiBold"/>
+                <TextBox Grid.Column="1" Text="{Binding SearchText, UpdateSourceTrigger=PropertyChanged}" Background="{StaticResource VitalsFieldBrush}" Foreground="{StaticResource VitalsWhiteBrush}" BorderBrush="{StaticResource VitalsBorderBrush}" Padding="8" CaretBrush="{StaticResource VitalsWhiteBrush}"/>
+            </Grid>
+        </Border>
+
+        <Border Grid.Row="4" Background="{StaticResource VitalsPanelBrush}" CornerRadius="8" BorderBrush="{StaticResource VitalsBorderBrush}" BorderThickness="1" ClipToBounds="True">
+            <DataGrid x:Name="LogsDataGrid" ItemsSource="{Binding LogEntriesView}"
                       AutoGenerateColumns="False"
                       CanUserAddRows="False"
                       IsReadOnly="True"
                       HeadersVisibility="Column"
                       GridLinesVisibility="None"
-                      Background="Transparent"
-                      RowBackground="#374151"
-                      AlternatingRowBackground="#3d4859"
-                      Foreground="White"
+                      Background="{StaticResource VitalsTransparentBrush}"
+                      RowBackground="{StaticResource VitalsPanelBrush}"
+                      AlternatingRowBackground="{StaticResource VitalsPanelAltBrush}"
+                      Foreground="{StaticResource VitalsWhiteBrush}"
                       BorderThickness="0"
                       RowHeaderWidth="0"
                       FontSize="12"
+                      CanUserSortColumns="True"
                       HorizontalScrollBarVisibility="Auto"
                       VerticalScrollBarVisibility="Auto">
 
+                <DataGrid.Resources>
+                    <Style x:Key="CellTextWithTooltipStyle" TargetType="TextBlock">
+                        <Setter Property="Foreground" Value="{StaticResource VitalsWhiteBrush}"/>
+                        <Setter Property="VerticalAlignment" Value="Center"/>
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                        <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                        <Setter Property="ToolTipService.InitialShowDelay" Value="1000"/>
+                        <Setter Property="ToolTipService.ShowDuration" Value="20000"/>
+                    </Style>
+                </DataGrid.Resources>
+
                 <DataGrid.ColumnHeaderStyle>
                     <Style TargetType="DataGridColumnHeader">
-                        <Setter Property="Background" Value="#1F2937"/>
-                        <Setter Property="Foreground" Value="#9CA3AF"/>
+                        <Setter Property="Background" Value="{StaticResource VitalsFieldBrush}"/>
+                        <Setter Property="Foreground" Value="{StaticResource VitalsMutedTextBrush}"/>
                         <Setter Property="Padding" Value="12,10"/>
                         <Setter Property="FontWeight" Value="SemiBold"/>
                         <Setter Property="BorderThickness" Value="0,0,0,1"/>
-                        <Setter Property="BorderBrush" Value="#4B5563"/>
+                        <Setter Property="BorderBrush" Value="{StaticResource VitalsBorderBrush}"/>
                     </Style>
                 </DataGrid.ColumnHeaderStyle>
 
@@ -45,27 +116,56 @@
                         </Setter>
                         <Style.Triggers>
                             <Trigger Property="IsSelected" Value="True">
-                                <Setter Property="Background" Value="#1A1A1A"/>
-                                <Setter Property="Foreground" Value="White"/>
+                                <Setter Property="Background" Value="{StaticResource VitalsWindowBackgroundBrush}"/>
+                                <Setter Property="Foreground" Value="{StaticResource VitalsWhiteBrush}"/>
                             </Trigger>
                         </Style.Triggers>
                     </Style>
                 </DataGrid.CellStyle>
 
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="TIME" Binding="{Binding TimeText}" Width="1.2*"/>
-                    <DataGridTextColumn Header="SOURCE" Binding="{Binding Source}" Width="1.1*"/>
-                    <DataGridTextColumn Header="MESSAGE" Binding="{Binding Message}" Width="2.2*"/>
-                    <DataGridTextColumn Header="LEVEL" Binding="{Binding Level}" Width="0.8*">
+                    <DataGridTextColumn ElementStyle="{StaticResource CellTextWithTooltipStyle}" Header="TIME" Binding="{Binding TimeText}" Width="1.2*"/>
+                    <DataGridTextColumn ElementStyle="{StaticResource CellTextWithTooltipStyle}" Binding="{Binding Source}" Width="1.1*">
+                        <DataGridTextColumn.Header>
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="SOURCE" VerticalAlignment="Center"/>
+                                <ComboBox DockPanel.Dock="Right" Width="28" Height="22" Margin="6,0,0,0"
+                                          ItemsSource="{Binding DataContext.SourceOptions, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                          SelectedItem="{Binding DataContext.SelectedSource, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          ToolTip="Filter by source"/>
+                            </DockPanel>
+                        </DataGridTextColumn.Header>
+                    </DataGridTextColumn>
+                    <DataGridTextColumn ElementStyle="{StaticResource CellTextWithTooltipStyle}" Header="MESSAGE" Binding="{Binding Message}" Width="2.4*"/>
+                    <DataGridTextColumn Binding="{Binding Level}" Width="0.9*">
+                        <DataGridTextColumn.Header>
+                            <DockPanel LastChildFill="True">
+                                <TextBlock Text="LEVEL" VerticalAlignment="Center"/>
+                                <ComboBox DockPanel.Dock="Right" Width="28" Height="22" Margin="6,0,0,0"
+                                          ItemsSource="{Binding DataContext.LevelOptions, RelativeSource={RelativeSource AncestorType=DataGrid}}"
+                                          SelectedItem="{Binding DataContext.SelectedLevel, RelativeSource={RelativeSource AncestorType=DataGrid}, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                          ToolTip="Filter by level"/>
+                            </DockPanel>
+                        </DataGridTextColumn.Header>
                         <DataGridTextColumn.ElementStyle>
                             <Style TargetType="TextBlock">
+                                <Setter Property="Foreground" Value="{StaticResource VitalsWhiteBrush}"/>
+                                <Setter Property="VerticalAlignment" Value="Center"/>
+                                <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                                <Setter Property="ToolTip" Value="{Binding Text, RelativeSource={RelativeSource Self}}"/>
+                                <Setter Property="ToolTipService.InitialShowDelay" Value="1000"/>
+                                <Setter Property="ToolTipService.ShowDuration" Value="20000"/>
                                 <Style.Triggers>
                                     <DataTrigger Binding="{Binding Level}" Value="Error">
-                                        <Setter Property="Foreground" Value="#F87171"/>
+                                        <Setter Property="Foreground" Value="{StaticResource VitalsErrorLightBrush}"/>
                                         <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                     <DataTrigger Binding="{Binding Level}" Value="Warning">
-                                        <Setter Property="Foreground" Value="#980B19"/>
+                                        <Setter Property="Foreground" Value="{StaticResource VitalsWarningBrush}"/>
+                                    </DataTrigger>
+                                    <DataTrigger Binding="{Binding Level}" Value="Login Required">
+                                        <Setter Property="Foreground" Value="{StaticResource VitalsInfoBrush}"/>
+                                        <Setter Property="FontWeight" Value="Bold"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -74,5 +174,10 @@
                 </DataGrid.Columns>
             </DataGrid>
         </Border>
+
+        <StackPanel Grid.Row="6" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Open Log Folder" Command="{Binding OpenLogFolderCommand}" Width="135" Style="{StaticResource LogActionButtonStyle}" Margin="0,0,10,0"/>
+            <Button Content="Clear View" Command="{Binding ClearLogsCommand}" Width="105" Style="{StaticResource LogActionButtonStyle}"/>
+        </StackPanel>
     </Grid>
 </UserControl>

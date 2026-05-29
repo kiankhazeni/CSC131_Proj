@@ -1,20 +1,33 @@
-﻿using System.Windows.Input;
+using System;
+using System.ComponentModel;
+using System.Windows.Input;
+using UserInterface.Models;
+using UserInterface.Services;
 
 namespace UserInterface.ViewModels
 {
-    public class MainViewModel : BaseViewModel
+    public class MainViewModel : BaseViewModel, IDisposable
     {
+        private readonly AppSettings _settings;
+        private readonly AppSettingsService _settingsService;
+        private readonly LogService _logService;
+        private readonly AutomationService _automationService;
         private BaseViewModel _currentViewModel;
         private string _currentSectionTitle = "Dashboard";
-        private bool _isAutomationRunning = true;
 
         public MainViewModel()
         {
-            StudentsViewModel = new StudentsViewModel();
-            DashboardViewModel = new DashboardViewModel(StudentsViewModel, this);
-            RemindersViewModel = new RemindersViewModel();
-            LogsViewModel = new LogsViewModel();
-            SettingsViewModel = new SettingsViewModel();
+            _settingsService = new AppSettingsService();
+            _settings = _settingsService.Load();
+            _logService = new LogService(_settings, _settingsService.SettingsFolderPath);
+            _automationService = new AutomationService(_settings, _logService);
+            _automationService.PropertyChanged += AutomationService_PropertyChanged;
+
+            StudentsViewModel = new StudentsViewModel(_settings, _settingsService, _logService);
+            LogsViewModel = new LogsViewModel(_logService);
+            RemindersViewModel = new RemindersViewModel(StudentsViewModel);
+            SettingsViewModel = new SettingsViewModel(_settings, _settingsService, _logService);
+            DashboardViewModel = new DashboardViewModel(StudentsViewModel, this, _logService, _automationService, _settings, _settingsService);
 
             _currentViewModel = DashboardViewModel;
 
@@ -26,6 +39,8 @@ namespace UserInterface.ViewModels
 
             StartAutomationCommand = new RelayCommand(StartAutomation, () => !IsAutomationRunning);
             StopAutomationCommand = new RelayCommand(StopAutomation, () => IsAutomationRunning);
+
+            _logService.Add("Application", "Vitals UI loaded.");
         }
 
         public DashboardViewModel DashboardViewModel { get; }
@@ -54,24 +69,9 @@ namespace UserInterface.ViewModels
             }
         }
 
-        public bool IsAutomationRunning
-        {
-            get => _isAutomationRunning;
-            set
-            {
-                _isAutomationRunning = value;
-                OnPropertyChanged();
-                OnPropertyChanged(nameof(AutomationStatusText));
+        public bool IsAutomationRunning => _automationService.IsRunning;
 
-                if (StartAutomationCommand is RelayCommand startCmd)
-                    startCmd.RaiseCanExecuteChanged();
-
-                if (StopAutomationCommand is RelayCommand stopCmd)
-                    stopCmd.RaiseCanExecuteChanged();
-            }
-        }
-
-        public string AutomationStatusText => IsAutomationRunning ? "Running" : "Stopped";
+        public string AutomationStatusText => _automationService.StatusText;
 
         public ICommand ShowDashboardCommand { get; }
         public ICommand ShowStudentsCommand { get; }
@@ -90,12 +90,40 @@ namespace UserInterface.ViewModels
 
         private void StartAutomation()
         {
-            IsAutomationRunning = true;
+            _settingsService.Save(_settings);
+            _automationService.StartAll();
         }
 
         private void StopAutomation()
         {
-            IsAutomationRunning = false;
+            _automationService.StopAll();
+        }
+
+        private void AutomationService_PropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == nameof(AutomationService.IsRunning) ||
+                e.PropertyName == nameof(AutomationService.StatusText))
+            {
+                OnPropertyChanged(nameof(IsAutomationRunning));
+                OnPropertyChanged(nameof(AutomationStatusText));
+
+                if (StartAutomationCommand is RelayCommand startCmd)
+                    startCmd.RaiseCanExecuteChanged();
+
+                if (StopAutomationCommand is RelayCommand stopCmd)
+                    stopCmd.RaiseCanExecuteChanged();
+            }
+        }
+
+        public void Dispose()
+        {
+            _automationService.Dispose();
+            StudentsViewModel.Dispose();
+
+            if (!_settings.RetainVisibleLogsBetweenSessions)
+                _logService.ClearVisible();
+
+            _logService.Dispose();
         }
     }
 }

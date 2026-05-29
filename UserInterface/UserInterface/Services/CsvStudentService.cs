@@ -19,10 +19,14 @@ namespace UserInterface.Services
                 .ToDictionary(g => g.Key, g => g.First());
 
             var results = new List<StudentRecord>();
+            var usedAhaKeys = new HashSet<string>();
 
             foreach (var preprod in preprodRows)
             {
-                ahaByEmail.TryGetValue(Normalize(preprod.Email), out var aha);
+                string key = Normalize(preprod.Email);
+                ahaByEmail.TryGetValue(key, out var aha);
+                if (!string.IsNullOrWhiteSpace(key))
+                    usedAhaKeys.Add(key);
 
                 results.Add(new StudentRecord
                 {
@@ -41,6 +45,27 @@ namespace UserInterface.Services
                     LocationName = preprod.LocationName,
                     Status = preprod.Status,
                     Group = preprod.Group
+                });
+            }
+
+            foreach (var aha in ahaRows)
+            {
+                string key = Normalize(aha.Email);
+                if (string.IsNullOrWhiteSpace(key) || usedAhaKeys.Contains(key))
+                    continue;
+
+                results.Add(new StudentRecord
+                {
+                    Email = aha.Email,
+                    FirstName = aha.FirstName,
+                    MiddleName = aha.MiddleName,
+                    LastName = aha.LastName,
+                    Phone = aha.Phone,
+                    Course = aha.Course,
+                    Date = aha.Date,
+                    AcuityRegistration = aha.AcuityRegistration,
+                    AhaRegistration = aha.AhaRegistration,
+                    ReminderEmailSent = aha.ReminderEmailSent
                 });
             }
 
