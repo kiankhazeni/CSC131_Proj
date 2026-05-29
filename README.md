@@ -27,7 +27,7 @@ The desktop app launches packaged Java modules from the `modules/` folder and us
 This is the recommended option for the client because it does not require Visual Studio, `.NET SDK`, or `.NET runtime`. This option is self-contained and includes the necessary runtime files, minus `Java 21`.
 
 #### Steps:
-1. Download the `client_package.zip` from [Google Drive](https://drive.google.com/file/d/1oz9Xwv2eXO00Rm0yDiHuun_mXjxp1w73/view?usp=sharing) (the file was too large to upload to GitHub)
+1. Download the `client_package.zip` from [Releases](https://github.com/kiankhazeni/CSC131_Proj/releases/tag/v1.0)
 2. Extract the zip folder in your desired location using passcode `cpr-lifeline`
 3. Open the extracted `VitalsAutomation` folder
 4. Scroll down and find `VitalsAutomation.exe`. This is the file you will run
@@ -49,7 +49,7 @@ This option is intended for the professor, grader, or anyone reviewing the sourc
 | <ul><li>An archive tool that can handle encrypted archives (e.g. 7-Zip)</li></ul>
 
 #### Steps
-1. Download `modules_with_intact_secrets.zip` from [Google Drive](https://drive.google.com/file/d/1jxerq7auVc2R5hslVxQtVv_WdHqIVnGn/view?usp=sharing) (the file was too large to upload to GitHub)
+1. Download `modules_with_intact_secrets.zip` from [Releases](https://github.com/kiankhazeni/CSC131_Proj/releases/tag/v1.0-source)
 2. Extract using passcode `cpr-lifeline`
 3. `UserInterface/` is the folder containing the main program. Access it via `UserInterface.sln` in Visual Studio and press Start
 3.  The other 4 folders are individual modules that have been packaged into `.jar` files and placed in `UserInterface/UserInterface/modules/`. Access the modules by opening each module's folder in your `Java`-compatible editor
